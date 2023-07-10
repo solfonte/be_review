@@ -1,5 +1,14 @@
 # Revisionismo
 
+¡Hola!
+Este es un importante paso en tu proceso de selección. Tendrás la oportunidad de generar un programa y presentarlo a miembros del equipo de Tecnología de Nilus.
+Te daremos algunos datos, puede que no todo lo que necesites esté en la data, esperamos que hagas las suposiciones que creas necesarias. No buscamos respuestas perfectas, el objetivo es entender tu proceso de razonamiento, armado de estrategia y estilo de trabajo.
+Tendrás 5  días para realizar la presentación. Luego, te daremos una devolución para seguir creciendo juntos. 
+
+Por favor cloná este repositorio y compartinos tu repositorio para entregar la solución
+
+¡Muchos éxitos!
+--- 
 A partir de las solicitudes firmadas luego de la final de Qatar 2022, el órgano rector del fútbol mundial está 
 evaluando realizar algunos cambios en el sistema de puntuación de los partidos de la siguiente manera:
 
