@@ -214,7 +214,7 @@ Por ejemplo, ejecutando desde la consola de Linux podemos utilizar el argumento 
 --match uruguay_vs_argentina.json > /dev/null
 
 
-# Evalua una serie ida y vuelta entre Uruguay y Argentina utilizando las reglas actuales
+# Evalua una serie ida y vuelta entre Uruguay y Argentina utilizando las reglas actuales (2023)
 ./fifa-review \
 --match argentina_vs_uruguay.json \
 --match uruguay_vs_argentina.json > /dev/null
