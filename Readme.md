@@ -112,18 +112,26 @@ En caso de especificar una listao de valores, se entiende que se trata de altern
 * `at_least` indica la cantidad de veces que debe ocurrir un evento para que se otorguen puntos. Por ejemplo
 `{at_least: 3}` indica que deben ocurrir al menos 3 eventos iguales
 
-## Ejemplos
+* `player` es un campo opcional que indica la posición del jugador que realizó el evento. Inicialmente solo se puede especificar el valor `goalkeeper`. En caso de no estar presente, se asume que se trata de cualquier jugador de campo.
 
-El siguiente arreglo de reglas indica las condiciones especiales que se van a aplicar a un partido
+## Reglas por default
+Por default se presumen las reglas actuales
+* No existe punto bonus
+* El equipo ganador recibe tres puntos
+* El equipo perdedor no recibe puntos
+* En caso de empate cada equipo recibe 1 punto
+  
+## Conjunto inicial de reglas
 
-* El ganador del partido obtiene dos puntos
+Inicialmente, el órgano rector nos ha pedido establecer las siguientes condiciones (se pueden aplicar parcialmente o todas)
+El siguiente arreglo de reglas indica las condiciones especiales que se aplicarían a un partido
+
+* El ganador del partido obtiene dos puntos (el empate no se modifica)
 * Un equipo consigue un punto bonus por cada uno de los siguientes eventos
   1. Marca un gol luego del minuto 90 (en el agregado del segundo tiempo, no en suplementario)
-  2. El arquero ataja un penal en tiempo agregado (del primer o segundo tiempo)
-  3. El equipo anota 3 o mas goles
+  2. El equipo anota 3 o mas goles
  * Un gol vale doble si
-  1. Se anota desde mas de 25 metros
-  2. Lo anota el arquero
+  1. Lo anota el arquero
 
 ```json
 [
@@ -143,15 +151,6 @@ El siguiente arreglo de reglas indica las condiciones especiales que se van a ap
 	"bonus_points": 1
 },
 {
-	"name": "out_of_the_box_goal",
-	"type": "particular",
-	"event": "score",
-	"condition": {
-		"distance" "+25m"
-	},
-	"value_factor": "x2"
-},
-{
 	"name": "keeper goal",
 	"type": "particular",
 	"event": "score",
@@ -159,15 +158,6 @@ El siguiente arreglo de reglas indica las condiciones especiales que se van a ap
 		"player": "goalkeeper"
 	},
 	"value_factor": "x2"
-},
-{
-	"name": "pk_save_on_agg",
-	"type": "side",
-	"event": "pk_save",
-	"condition": {
-		"after_time": ["45 +0", "90 +0"]
-	},
-	"bonus_points": 1
 },
 {
 	"name": "scoring",
@@ -215,13 +205,19 @@ La salida debe ser en formato JSON y debe contener (para cada equipo)
 * Partidos jugados
 * Goles a favor (incluyendo los dobles)
 
-Por ejemplo, ejecutando desde la consola de Linux
+Por ejemplo, ejecutando desde la consola de Linux podemos utilizar el argumento `--match` para especificar un partido (admite múltiples ocurrencias, pero al menos una entrada) y `--rules` para especificar las reglas (admite 0 o 1 ocurrencias)
 
 ```shell
+# Evalua un triangular entre Uruguay, Argentina y España utilizando las reglas incluidas en rule-list.json
 ./fifa-review --rules rule-list.json \
 --match uruguay_vs_spain.json \
 --match argentina_vs_spain.json \
---match uruguay_vs_argentina.json
+--match uruguay_vs_argentina.json > /dev/null
 
+
+# Evalua una serie ida y vuelta entre Uruguay y Argentina utilizando las reglas actuales
+./fifa-review \
+--match argentina_vs_uruguay.json \
+--match uruguay_vs_argentina.json > /dev/null
 ```
 
