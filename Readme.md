@@ -122,7 +122,6 @@ Por default se presumen las reglas actuales
 * En caso de empate cada equipo recibe 1 punto
   
 ## Conjunto inicial de reglas
-
 Inicialmente, el órgano rector nos ha pedido establecer las siguientes condiciones (se pueden aplicar parcialmente o todas)
 El siguiente arreglo de reglas indica las condiciones especiales que se aplicarían a un partido
 
@@ -130,7 +129,7 @@ El siguiente arreglo de reglas indica las condiciones especiales que se aplicar�
 * Un equipo consigue un punto bonus por cada uno de los siguientes eventos
   1. Marca un gol luego del minuto 90 (en el agregado del segundo tiempo, no en suplementario)
   2. El equipo anota 3 o mas goles
- * Un gol vale doble si
+* Un gol vale doble si
   1. Lo anota el arquero
 
 ```json
