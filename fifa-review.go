@@ -14,16 +14,23 @@ func main() {
 	rules_file_path := flag.String("rules", "", "rules file")
     flag.Parse()
 
+	fmt.Println("READ ", *rules_file_path)
+
 	if len(match_file_paths) == 0 {
 		fmt.Println("Please provide at least one match file path")
 		return
 	}
 
+	parser:= utils.JsonParser{}
+
 	if len(*rules_file_path) != 0 {
-		//do something
+		rules, err :=parser.ParseRules(*rules_file_path)
+
+		if err != nil {
+			return
+		}
 	}
 
-	parser:= utils.JsonParser{}
 
 	for _, matchFilePath := range match_file_paths {
 
@@ -35,5 +42,7 @@ func main() {
 		
 		fmt.Println(match)
 	}
+
+	
 
 }
