@@ -5,13 +5,14 @@ import (
 	"fifa-review/entities"
 	"fifa-review/schemas"
 	"fmt"
+	"strconv"
 )
 
 type JsonParser struct{}
 
-func CreateEventsList(events []schemas.EventSchema) []entities.Event {
+func CreateEventsList(events []schemas.EventSchema) []*entities.Event {
 
-	parsedEvents := []entities.Event{}
+	parsedEvents := []*entities.Event{}
 
 	for _, event := range events {
 
@@ -55,15 +56,15 @@ func (j *JsonParser) ParseMatch(filepath string) (entities.Match, error) {
 	parsedAwayEvents := CreateEventsList(match.Away_events)
 	parsedHomeEvents := CreateEventsList(match.Home_events)
 
-	parsedMatch := entities.NewMatch(match.Teams.Away, parsedAwayEvents, match.Teams.Home, parsedHomeEvents)
+	parsedMatch := *entities.NewMatch(match.Teams.Away, parsedAwayEvents, match.Teams.Home, parsedHomeEvents)
 
 	return parsedMatch, jsonParseError
 }
 
-func (j *JsonParser) ParseRules(filepath string) ([]entities.Rule, error) {
+func (j *JsonParser) ParseRules(filepath string) (map[string][]entities.Rule, error) {
 
 	var rules []schemas.RuleSchema
-	parsedRules := []entities.Rule{}
+	parsedRules := make(map[string][]entities.Rule)
 	fileReader := FileReader{}
 	object, fileReaderError := fileReader.ReadFile(filepath)
 
@@ -86,9 +87,21 @@ func (j *JsonParser) ParseRules(filepath string) ([]entities.Rule, error) {
 			points = rule.Bonus_points
 		}
 
-		newRule := entities.NewRule(rule.Type, rule.Event, points, rule.Condition.Distance, rule.Condition.Player, rule.Condition.At_least, rule.Value_factor, rule.Condition.After_time)
+		var valueFactor int
+		if len(rule.Value_factor) > 0 {
+			fmt.Println(rule.Value_factor[1:2])
+			valueFactor, _ = strconv.Atoi(rule.Value_factor[1:2])
 
-		parsedRules = append(parsedRules, newRule)
+		} 
+		newRule := entities.RuleFactory(rule.Type, rule.Event, points, rule.Condition.Distance, rule.Condition.Player, rule.Condition.At_least, valueFactor, rule.Condition.After_time)
+
+		_, hasKey := parsedRules[rule.Type]
+
+		if hasKey {
+			parsedRules[rule.Type] = append(parsedRules[rule.Type], newRule)
+		} else {
+			parsedRules[rule.Type] = []entities.Rule {newRule}
+		}
 	}
 
 	return parsedRules, jsonParseError

@@ -7,10 +7,18 @@ type Event struct {
 	valueFactor  int
 }
 
-func NewEvent(eventType string, time string, eventDetails map[string]string) Event {
-	return Event{eventType: eventType, time: time, eventDetails: eventDetails, valueFactor: 1}
+func NewEvent(eventType string, time string, eventDetails map[string]string) *Event {
+	return &Event{eventType: eventType, time: time, eventDetails: eventDetails, valueFactor: 1}
 }
 
 func (e *Event) GetType() string {
 	return e.eventType
+}
+
+func (e *Event) SetValueFactor(valueFactor int) {
+	e.valueFactor = valueFactor
+}
+
+func (e *Event) GetValueFactor() int {
+	return e.valueFactor
 }

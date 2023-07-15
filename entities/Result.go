@@ -6,3 +6,8 @@ type Result struct {
 	Played_matches_amount  int
 	Scores_in_favor_amount int
 }
+
+
+func (r *Result) SetTotalPoints(points int) {
+	r.Total_points = points
+}

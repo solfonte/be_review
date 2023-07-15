@@ -7,55 +7,80 @@ import (
 	"fmt"
 )
 
-func prepareData() ([]entities.Match, []entities.Rule, error) {
-	var match_file_paths utils.FlagsArray
-	flag.Var(&match_file_paths, "match", "matches files")
-	rules_file_path := flag.String("rules", "", "rules file")
+func getFlagFiles() (string, utils.FlagsArray) {
+	rulesFilePath := flag.String("rules", "", "rules file")
+	var matchFilePaths utils.FlagsArray
+	flag.Var(&matchFilePaths, "match", "matches files")
 	flag.Parse()
 
-	if len(match_file_paths) == 0 {
+	return *rulesFilePath, matchFilePaths
+}
+
+func prepareMatches(matchFilePaths utils.FlagsArray) ([]entities.Match, error) {
+	
+
+	if len(matchFilePaths) == 0 {
 		fmt.Println("Please provide at least one match file path")
-		return nil, nil, nil
+		return nil, nil
 	}
 
 	parser := utils.JsonParser{}
-
-	var rules []entities.Rule
-
-	if len(*rules_file_path) != 0 {
-		var err error
-		rules, err = parser.ParseRules(*rules_file_path)
-
-		if err != nil {
-			return nil, nil, err
-		}
-	}
-
 	matches := []entities.Match{}
 
-	for _, matchFilePath := range match_file_paths {
+	for _, matchFilePath := range matchFilePaths {
 
 		match, err := parser.ParseMatch(matchFilePath)
 
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		matches = append(matches, match)
 	}
 
-	return matches, rules, nil
-
+	return matches, nil
 }
+
+
+func prepareRules(rulesFilePath string) (map[string][]entities.Rule, error){
+	parser := utils.JsonParser{}
+
+	rules, err := parser.ParseRules(rulesFilePath)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return rules, nil
+}
+
 
 func main() {
 
-	matches, rules, err := prepareData()
+	rulesFile, matchesFiles := getFlagFiles()
+	matches, err := prepareMatches(matchesFiles)
+	if err != nil {
+		return
+	}
+
+	var rules map[string][]entities.Rule
+	if len(rulesFile) > 0{
+		rules, err = prepareRules(rulesFile)
+		
+	}
 
 	if err != nil {
 		return
 	}
 
-	fmt.Println(matches)
 	fmt.Println(rules)
+	fmt.Println(matches)
+
+	/* for _, match := range matches {
+		
+		for _, rule := range rules["particular"] {
+
+			match.applyRuleOnEvents(rule)
+		}
+	} */
 }

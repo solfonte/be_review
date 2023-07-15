@@ -15,15 +15,15 @@ type MatchRule struct {
 	points int
 }
 
-type Particular struct {
+type ParticularRule struct {
 	event             string
 	minimunOcurrences int
-	points            int
+	valueFactor       int
 	player            string
 	afterTime         string
 }
 
-func NewRule(ruleType string, event string, points int, distance string, player string, minimunOcurrences int, valueFactor string, afterTime string) Rule {
+func RuleFactory(ruleType string, event string, points int, distance string, player string, minimunOcurrences int, valueFactor int, afterTime string) Rule {
 	if ruleType == "score" || ruleType == "single" {
 		return BonusPointsRule{
 			event:             event,
@@ -33,17 +33,35 @@ func NewRule(ruleType string, event string, points int, distance string, player 
 			afterTime:         afterTime,
 		}
 	} else if ruleType == "particular" {
-		return Particular{
-			event:             event,
-			minimunOcurrences: minimunOcurrences,
-			points:            points,
-			player:            player,
-			afterTime:         afterTime,
-		}
+		return NewParticularRule(event, minimunOcurrences, valueFactor, player, afterTime)
 	} else {
 		return MatchRule{
 			event:  event,
 			points: points,
 		}
+	}
+}
+
+func NewParticularRule(event string, minimunOcurrences int, valueFactor int, player string, afterTime string) ParticularRule {
+	return ParticularRule {
+		event:             event,
+		minimunOcurrences: minimunOcurrences,
+		valueFactor:       valueFactor,
+		player:            player,
+		afterTime:         afterTime,
+	}
+}
+
+
+func (particularRule *ParticularRule) Apply (event map[string][]*Event) {
+	
+	events, hasKey := event["score"]
+	if !hasKey {
+		return
+	}
+
+	for _, event := range events {
+		//TODO: tiene que cumplir condicion
+		event.SetValueFactor(particularRule.valueFactor)
 	}
 }
