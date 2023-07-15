@@ -37,7 +37,7 @@ func CreateEventsList(events []schemas.EventSchema) []entities.Event {
 
 }
 
-func (j *JsonParser) ParseMatch(filepath string) (entities.Match /*despues se devuelve el struct bien*/, error) {
+func (j *JsonParser) ParseMatch(filepath string) (entities.Match, error) {
 
 	var match schemas.MatchSchema
 	fileReader := FileReader{}
@@ -62,14 +62,15 @@ func (j *JsonParser) ParseMatch(filepath string) (entities.Match /*despues se de
 }
 
 
-func (j *JsonParser) ParseRules(filepath string) ([]schemas.RuleSchema /*despues se devuelve el struct bien*/, error) {
+func (j *JsonParser) ParseRules(filepath string) ([]entities.Rule, error) {
 
 	var rules []schemas.RuleSchema
+	parsedRules := []entities.Rule{}
 	fileReader := FileReader{}
 	object, fileReaderError := fileReader.ReadFile(filepath)
 	
 	if fileReaderError != nil {
-		return rules, fileReaderError
+		return parsedRules, fileReaderError
 	}
 
 	jsonParseError := json.Unmarshal(object, &rules)
@@ -78,5 +79,19 @@ func (j *JsonParser) ParseRules(filepath string) ([]schemas.RuleSchema /*despues
 		fmt.Println("An error occured while parsing file ", filepath)
 	}
 
-	return rules, jsonParseError
+	for _, rule := range rules {
+
+		var points int
+		if rule.Points > 0 {
+			points = rule.Points
+		} else {
+			points = rule.Bonus_points
+		}
+
+		newRule := entities.NewRule (rule.Type, rule.Event, points, rule.Condition.Distance, rule.Condition.Player, rule.Condition.At_least, rule.Value_factor, rule.Condition.After_time)
+
+		parsedRules = append(parsedRules, newRule)
+	}
+
+	return parsedRules, jsonParseError
 }
