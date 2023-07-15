@@ -57,6 +57,5 @@ func main() {
 	}
 
 	fmt.Println(matches)
-	fmt.Println("\n\n")
 	fmt.Println(rules)
 }

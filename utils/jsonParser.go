@@ -2,17 +2,16 @@ package utils
 
 import (
 	"encoding/json"
-	"fifa-review/schemas"
 	"fifa-review/entities"
+	"fifa-review/schemas"
 	"fmt"
 )
 
-
-type JsonParser struct {}
+type JsonParser struct{}
 
 func CreateEventsList(events []schemas.EventSchema) []entities.Event {
 
-	parsedEvents := []entities.Event {}
+	parsedEvents := []entities.Event{}
 
 	for _, event := range events {
 
@@ -42,9 +41,9 @@ func (j *JsonParser) ParseMatch(filepath string) (entities.Match, error) {
 	var match schemas.MatchSchema
 	fileReader := FileReader{}
 	object, fileReaderError := fileReader.ReadFile(filepath)
-	
+
 	if fileReaderError != nil {
-		return entities.Match {}, fileReaderError
+		return entities.Match{}, fileReaderError
 	}
 
 	jsonParseError := json.Unmarshal(object, &match)
@@ -61,14 +60,13 @@ func (j *JsonParser) ParseMatch(filepath string) (entities.Match, error) {
 	return parsedMatch, jsonParseError
 }
 
-
 func (j *JsonParser) ParseRules(filepath string) ([]entities.Rule, error) {
 
 	var rules []schemas.RuleSchema
 	parsedRules := []entities.Rule{}
 	fileReader := FileReader{}
 	object, fileReaderError := fileReader.ReadFile(filepath)
-	
+
 	if fileReaderError != nil {
 		return parsedRules, fileReaderError
 	}
@@ -88,7 +86,7 @@ func (j *JsonParser) ParseRules(filepath string) ([]entities.Rule, error) {
 			points = rule.Bonus_points
 		}
 
-		newRule := entities.NewRule (rule.Type, rule.Event, points, rule.Condition.Distance, rule.Condition.Player, rule.Condition.At_least, rule.Value_factor, rule.Condition.After_time)
+		newRule := entities.NewRule(rule.Type, rule.Event, points, rule.Condition.Distance, rule.Condition.Player, rule.Condition.At_least, rule.Value_factor, rule.Condition.After_time)
 
 		parsedRules = append(parsedRules, newRule)
 	}

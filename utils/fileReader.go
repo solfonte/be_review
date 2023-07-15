@@ -1,13 +1,12 @@
 package utils
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
-	"fmt"
 )
 
-type FileReader struct {}
-
+type FileReader struct{}
 
 func (fileReader *FileReader) ReadFile(filepath string) ([]byte, error) {
 	file, err := os.Open(filepath)
@@ -15,8 +14,8 @@ func (fileReader *FileReader) ReadFile(filepath string) ([]byte, error) {
 	if err != nil {
 		fmt.Println("An error occured while reading the match file with path ", filepath, ": ", err)
 		return nil, err
-	} 
-	byteValue, _ = ioutil.ReadAll(file)	
+	}
+	byteValue, _ = ioutil.ReadAll(file)
 	file.Close()
-	return byteValue, err	
+	return byteValue, err
 }
