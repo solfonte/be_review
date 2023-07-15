@@ -101,3 +101,13 @@ func (bonuPointsRule BonusPointsRule) Apply (eventsMap map[string][]*Event) {
 	}
 }
 
+func (matchRule MatchRule) Apply (eventsMap map[string][]*Event) {
+
+	
+	events, hasKey := eventsMap["win"]
+	if !hasKey {
+		return
+	}
+
+	events[0].SetPoints(matchRule.points)
+}
