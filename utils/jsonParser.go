@@ -37,14 +37,14 @@ func CreateEventsList(events []schemas.EventSchema) []*entities.Event {
 
 }
 
-func (j *JsonParser) ParseMatch(filepath string) (entities.Match, error) {
+func (j *JsonParser) ParseMatch(filepath string) (*entities.Match, error) {
 
 	var match schemas.MatchSchema
 	fileReader := FileReader{}
 	object, fileReaderError := fileReader.ReadFile(filepath)
 
 	if fileReaderError != nil {
-		return entities.Match{}, fileReaderError
+		return nil, fileReaderError
 	}
 
 	jsonParseError := json.Unmarshal(object, &match)
@@ -56,7 +56,7 @@ func (j *JsonParser) ParseMatch(filepath string) (entities.Match, error) {
 	parsedAwayEvents := CreateEventsList(match.Away_events)
 	parsedHomeEvents := CreateEventsList(match.Home_events)
 
-	parsedMatch := *entities.NewMatch(match.Teams.Away, parsedAwayEvents, match.Teams.Home, parsedHomeEvents)
+	parsedMatch := entities.NewMatch(match.Teams.Away, parsedAwayEvents, match.Teams.Home, parsedHomeEvents)
 
 	return parsedMatch, jsonParseError
 }
@@ -95,12 +95,12 @@ func (j *JsonParser) ParseRules(filepath string) (map[string][]entities.Rule, er
 		} 
 		newRule := entities.RuleFactory(rule.Type, rule.Event, points, rule.Condition.Distance, rule.Condition.Player, rule.Condition.At_least, valueFactor, rule.Condition.After_time)
 
-		_, hasKey := parsedRules[rule.Type]
+		_, hasKey := parsedRules[newRule.GetRuleType()]
 
 		if hasKey {
-			parsedRules[rule.Type] = append(parsedRules[rule.Type], newRule)
+			parsedRules[newRule.GetRuleType()] = append(parsedRules[newRule.GetRuleType()], newRule)
 		} else {
-			parsedRules[rule.Type] = []entities.Rule {newRule}
+			parsedRules[newRule.GetRuleType()] = []entities.Rule {newRule}
 		}
 	}
 
