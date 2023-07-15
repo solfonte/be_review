@@ -10,6 +10,8 @@ type EventSchema struct {
 	Event string
 	Time string
 	Player string
+	Distance string
+	Obs string
 }
 
 type MatchSchema struct {
