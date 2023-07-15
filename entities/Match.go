@@ -12,7 +12,7 @@ func NewMatch(awayPlayer string, awayEvents []*Event, homePlayer string, homeEve
 	return &Match{teams: teams}
 }
 
-func (m *Match) ApplyRuleOnEvents(rule ParticularRule) {
+func (m *Match) ApplyRules(rule Rule) {
 
 	for _, outcome := range m.teams {
 		rule.Apply(outcome.GetEvents())
@@ -32,7 +32,7 @@ func (m *Match) DefineWinner() {
 
 		if hasScores {
 			for _, score := range scores{
-				points += score.GetValueFactor()
+				points += score.GetFinalPoints()
 			}
 		}
 
