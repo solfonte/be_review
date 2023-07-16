@@ -94,7 +94,7 @@ func TestApplyingParticularRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 
 	particularRule := entities.NewParticularRule("particular", 0, 2, "", "")
 
-	match.ApplyRules(particularRule)
+	match.ApplySpecialRule(particularRule)
 	match.DefineWinner()
 	match.AssignPointsToWinner()
 	results := match.GetResults()
