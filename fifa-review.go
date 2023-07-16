@@ -94,6 +94,8 @@ func main() {
 			match.ApplyRules(rules["match"][0])
 		}
 
+		match.AssignPointsToWinner()
+
 		fmt.Println(resultsPerCountry)
 		fmt.Println(match.GetResults())
 	}
