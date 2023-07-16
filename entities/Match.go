@@ -62,3 +62,10 @@ func (m *Match) GetResults() map[string]Result {
     }
 	return results
 }
+
+
+func (m *Match) AssignPointsToWinner() {
+	for _, outcome := range m.teams {
+		outcome.AssignPointsIfWinner()
+    }
+}

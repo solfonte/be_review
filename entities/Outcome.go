@@ -29,7 +29,7 @@ func (o *Outcome) GetEvents() map[string][]*Event{
 }
 
 func (o *Outcome) SetTotalPoints(points int) {
-	o.result.SetTotalPoints(points)
+	o.result.AddTotalPoints(points)
 }
 
 
@@ -39,4 +39,14 @@ func (o *Outcome) WinMatch() {
 
 func (o *Outcome) GetResults() *Result {
 	return o.result
+}
+
+func (o *Outcome) AssignPointsIfWinner() {
+
+	event, isWinner := o.events["win"]
+
+	if isWinner {
+		o.result.AddTotalPoints(event[0].GetFinalPoints())
+	}
+
 }

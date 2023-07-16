@@ -8,6 +8,6 @@ type Result struct {
 }
 
 
-func (r *Result) SetTotalPoints(points int) {
-	r.Total_points = points
+func (r *Result) AddTotalPoints(points int) {
+	r.Total_points += points
 }
