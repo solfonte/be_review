@@ -19,3 +19,13 @@ func (fileReader *FileReader) ReadFile(filepath string) ([]byte, error) {
 	file.Close()
 	return byteValue, err
 }
+
+func (fileReader *FileReader) WriteFile(filepath string, jsonData []byte) {
+	file, err := os.Create(filepath)
+	if err != nil {
+		fmt.Println("Error creating file:", err)
+		return
+	}
+	_, err = file.Write(jsonData)
+	file.Close()
+}

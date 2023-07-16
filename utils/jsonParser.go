@@ -113,3 +113,15 @@ func (j *JsonParser) ParseRules(filepath string) ([]entities.MatchRule,[]entitie
 
 	return matchRules, bonusPointsRules, particularRules, jsonParseError
 }
+
+
+func (j *JsonParser) SaveResults (results map[string]entities.Result) {
+	jsonData, err := json.Marshal(results)
+	if err != nil {
+		fmt.Println("Error marshaling JSON:", err)
+		return
+	}
+	fileReader := FileReader{}
+	fileReader.WriteFile("results.json", jsonData)
+
+}

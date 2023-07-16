@@ -5,6 +5,7 @@ import (
 	"fifa-review/utils"
 	"flag"
 	"fmt"
+	"sort"
 )
 
 func getFlagFiles() (string, utils.FlagsArray) {
@@ -41,6 +42,29 @@ func prepareMatches(matchFilePaths utils.FlagsArray) ([]*entities.Match, error) 
 	return matches, nil
 }
 
+func defineTableOrder(results map[string]*entities.Result) map[string]entities.Result {
+	points := make(map[string]int)
+	orderedResults := make(map[string]entities.Result)
+
+	for team, result := range results {
+		totalPoints := result.Total_points + result.Bonus_points
+		points[team] = totalPoints
+	}
+
+	teams := make([]string, 0, len(points))
+	for key := range points {
+		teams = append(teams, key)
+	}
+
+	sort.Strings(teams)
+
+	for _, team := range teams {
+		orderedResults[team] = *results[team]
+	}
+
+	return orderedResults
+}
+
 func prepareRules(rulesFilePath string) ([]entities.MatchRule,[]entities.BonusPointsRule,[]entities.ParticularRule, error) {
 	parser := utils.JsonParser{}
 
@@ -53,6 +77,10 @@ func prepareRules(rulesFilePath string) ([]entities.MatchRule,[]entities.BonusPo
 	return matchRules, bonusPointsRules, particularRules, nil
 }
 
+func SaveResults(orderedCountriesByPoints map[string]entities.Result) {
+	parser := utils.JsonParser{}
+	parser.SaveResults(orderedCountriesByPoints)
+}
 
 func main() {
 
@@ -115,10 +143,8 @@ func main() {
 
 		
 	}
-	//orderedCountriesByPoints := defineTableOrder(resultsPerCountry)
-	fmt.Println("acaaaaa", resultsPerCountry)
 
-		for team, _ := range resultsPerCountry {
-			fmt.Println("aca", team, *resultsPerCountry[team])
-		} 
+	orderedCountriesByPoints := defineTableOrder(resultsPerCountry)
+	SaveResults(orderedCountriesByPoints)
+
 }
