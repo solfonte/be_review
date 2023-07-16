@@ -41,17 +41,16 @@ func prepareMatches(matchFilePaths utils.FlagsArray) ([]*entities.Match, error) 
 	return matches, nil
 }
 
-
-func prepareRules(rulesFilePath string) (map[string][]entities.Rule, error){
+func prepareRules(rulesFilePath string) ([]entities.MatchRule,[]entities.BonusPointsRule,[]entities.ParticularRule, error) {
 	parser := utils.JsonParser{}
 
-	rules,  err := parser.ParseRules(rulesFilePath)
+	matchRules, bonusPointsRules, particularRules, err := parser.ParseRules(rulesFilePath)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
 	}
 
-	return rules, nil
+	return matchRules, bonusPointsRules, particularRules, nil
 }
 
 
@@ -63,9 +62,11 @@ func main() {
 		return
 	}
 
-	var rules map[string][]entities.Rule
+	var matchRules []entities.MatchRule
+	var bonusPointsRules []entities.BonusPointsRule
+	var particularRules []entities.ParticularRule
 	if len(rulesFile) > 0{
-		rules, err = prepareRules(rulesFile)
+		matchRules, bonusPointsRules, particularRules, err = prepareRules(rulesFile)
 		
 	}
 
@@ -73,25 +74,27 @@ func main() {
 		return
 	}
 
-	fmt.Println(rules)
-	fmt.Println(matches)
+	fmt.Println("a", matchRules)
+	fmt.Println("b", bonusPointsRules)
+	fmt.Println("c", particularRules)
 
 	var resultsPerCountry map[string]entities.Result
 
 	for _, match := range matches {
 		
-		for _, rule := range rules["particular"] {
-			match.ApplyRules(rule)
+		for _, rule := range particularRules {
+			match.ApplySpecialRule(rule)
 		}
 		match.DefineWinner()
 
-		 for _, rule := range rules["bonusPoints"] {
-			match.ApplyRules(rule)
+		fmt.Println(match)
+
+		for _, rule := range bonusPointsRules {
+			match.ApplyBonusPointsRule(rule)
 		}
 
-		_, hasWinnerRule := rules["match"]
-		if hasWinnerRule {
-			match.ApplyRules(rules["match"][0])
+		for _, rule := range matchRules {
+			match.ApplyRuleToWinner(rule)
 		}
 
 		match.AssignPointsToWinner()
