@@ -3,6 +3,7 @@ package entities
 type Outcome struct {
 	totalPoints int
 	bonusPoints int
+	amountScores int
 	events map[string][]*Event
 }
 
@@ -48,8 +49,8 @@ func (o *Outcome) DrawMatch() {
 
 }
 
-func (o *Outcome) GetResults() (int, int) {
-	return o.totalPoints, o.bonusPoints
+func (o *Outcome) GetResults() (int, int, int) {
+	return o.totalPoints, o.bonusPoints, o.amountScores
 }
 
 func (o *Outcome) AssignPointsIfWinner() {
@@ -70,4 +71,8 @@ func (o *Outcome) AssignPointsIfDraw() {
 		o.totalPoints += event[0].GetFinalPoints()
 	}
 
+}
+
+func (o *Outcome) SetAmountScores(amountScores int) {
+	o.amountScores = amountScores
 }

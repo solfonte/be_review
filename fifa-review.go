@@ -74,11 +74,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("a", matchRules)
-	fmt.Println("b", bonusPointsRules)
-	fmt.Println("c", particularRules)
-
-	var resultsPerCountry map[string]entities.Result
+	resultsPerCountry := make(map[string]*entities.Result)
 
 	for _, match := range matches {
 		
@@ -86,20 +82,43 @@ func main() {
 			match.ApplySpecialRule(rule)
 		}
 		match.DefineFinalResult()
+		
+		for _, rule := range matchRules {
+			match.ApplyRuleToWinner(rule)
+		}
+		
 		match.AssignPointsAccordingFinalResult()
-
-		fmt.Println(match)
-
+		
 		for _, rule := range bonusPointsRules {
 			match.ApplyBonusPointsRule(rule)
 		}
 
-		for _, rule := range matchRules {
-			match.ApplyRuleToWinner(rule)
+
+		for team, result := range match.GetResults() {
+
+			r, hasResult := resultsPerCountry[team]
+			if hasResult {
+				r.Total_points += result.Total_points
+				r.Bonus_points += result.Bonus_points
+				r.Played_matches_amount += 1
+				r.Scores_in_favor_amount += result.Scores_in_favor_amount
+			} else {
+				resultsPerCountry[team] = &entities.Result{
+					Total_points: result.Total_points, 
+					Bonus_points: result.Bonus_points, 
+					Played_matches_amount: result.Played_matches_amount, 
+					Scores_in_favor_amount: result.Scores_in_favor_amount,
+				}
+			}
+			
 		}
 
-
-		fmt.Println(resultsPerCountry)
-		fmt.Println(match.GetResults())
+		
 	}
+	//orderedCountriesByPoints := defineTableOrder(resultsPerCountry)
+	fmt.Println("acaaaaa", resultsPerCountry)
+
+		for team, _ := range resultsPerCountry {
+			fmt.Println("aca", team, *resultsPerCountry[team])
+		} 
 }

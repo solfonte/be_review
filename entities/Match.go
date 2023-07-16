@@ -1,5 +1,5 @@
 package entities
-
+import ("fmt")
 type Match struct {
 	teams map[string]*Outcome
 }
@@ -37,33 +37,35 @@ func (m *Match) ApplyRuleToWinner(rule MatchRule) {
 
 func (m *Match) DefineFinalResult() {
 	var teamsAreEven bool 
-	var teamWithMorePoints string 
-	var maxPoints int = 0
+	var teamWithMoreScorePoints string 
+	var maxScorePoints int = 0
 
 	for team, outcome := range m.teams {
 		events := outcome.GetEvents()
-		points := 0
+		scorePoints := 0
 		scores, hasScores := events["score"]
+		fmt.Println("SOCRES", len(scores))
 
 		if hasScores {
-			for _, score := range scores{
-				points += score.GetFinalPoints()
+			amountScores := len(scores)
+			for _, score := range scores {
+				scorePoints += score.GetFinalPoints()
 			}
+			outcome.SetAmountScores(amountScores)
 		}
 
-		outcome.AddTotalPoints(points)
-
-		if maxPoints < points {
-			maxPoints = points
+		
+		if maxScorePoints < scorePoints {
+			maxScorePoints = scorePoints
 			teamsAreEven = false
-			teamWithMorePoints = team
-		} else if maxPoints == points {
+			teamWithMoreScorePoints = team
+		} else if maxScorePoints == scorePoints {
 			teamsAreEven = true
 		}
     }
 
 	if !teamsAreEven {
-		outcome := m.teams[teamWithMorePoints]
+		outcome := m.teams[teamWithMoreScorePoints]
 		outcome.WinMatch()
 	} else {
 		for _, outcome := range m.teams {
@@ -75,8 +77,8 @@ func (m *Match) DefineFinalResult() {
 func (m *Match) GetResults() map[string]Result {
 	results := make(map[string]Result)
 	for team, outcome := range m.teams {
-		points, bonusPoints := outcome.GetResults()
-		result := Result{Total_points: points, Bonus_points: bonusPoints}
+		points, bonusPoints, amountScores := outcome.GetResults()
+		result := Result{Total_points: points, Bonus_points: bonusPoints, Scores_in_favor_amount: amountScores}
 		results[team] = result
     }
 	return results
