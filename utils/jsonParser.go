@@ -61,15 +61,18 @@ func (j *JsonParser) ParseMatch(filepath string) (*entities.Match, error) {
 	return parsedMatch, jsonParseError
 }
 
-func (j *JsonParser) ParseRules(filepath string) (map[string][]entities.Rule, error) {
+func (j *JsonParser) ParseRules(filepath string) ([]entities.MatchRule,[]entities.BonusPointsRule,[]entities.ParticularRule, error) {
 
 	var rules []schemas.RuleSchema
-	parsedRules := make(map[string][]entities.Rule)
+	var matchRules []entities.MatchRule
+	var bonusPointsRules []entities.BonusPointsRule
+	var particularRules []entities.ParticularRule
+
 	fileReader := FileReader{}
 	object, fileReaderError := fileReader.ReadFile(filepath)
 
 	if fileReaderError != nil {
-		return parsedRules, fileReaderError
+		return nil, nil, nil, fileReaderError
 	}
 
 	jsonParseError := json.Unmarshal(object, &rules)
@@ -93,16 +96,22 @@ func (j *JsonParser) ParseRules(filepath string) (map[string][]entities.Rule, er
 			valueFactor, _ = strconv.Atoi(rule.Value_factor[1:2])
 
 		} 
-		newRule := entities.RuleFactory(rule.Type, rule.Event, points, rule.Condition.Distance, rule.Condition.Player, rule.Condition.At_least, valueFactor, rule.Condition.After_time)
+		
+		if rule.Type == "match" {
+			newRule := entities.NewMatchRule(rule.Event, points)
+			matchRules = append(matchRules, newRule)
+			fmt.Println(newRule, "nuevaaa")
 
-		_, hasKey := parsedRules[newRule.GetRuleType()]
+		} else if rule.Type == "single" || rule.Type == "side" {
+			newRule := entities.NewBonusPointsRule(rule.Event, rule.Condition.At_least, rule.Bonus_points, rule.Condition.Player, rule.Condition.After_time, rule.Condition.Distance)
+			bonusPointsRules = append(bonusPointsRules, newRule)
 
-		if hasKey {
-			parsedRules[newRule.GetRuleType()] = append(parsedRules[newRule.GetRuleType()], newRule)
 		} else {
-			parsedRules[newRule.GetRuleType()] = []entities.Rule {newRule}
+			newRule := entities.NewParticularRule(rule.Event, rule.Condition.At_least, valueFactor, rule.Condition.Player, rule.Condition.After_time)
+			particularRules = append(particularRules, newRule)
+
 		}
 	}
 
-	return parsedRules, jsonParseError
+	return matchRules, bonusPointsRules, particularRules, jsonParseError
 }
