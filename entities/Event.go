@@ -5,7 +5,6 @@ type Event struct {
 	time         string
 	eventDetails map[string]string
 	valueFactor  int
-	bonusPoints  int
 	points 		 int
 }
 
@@ -31,10 +30,20 @@ func (e *Event) GetFinalPoints() int {
 	return e.valueFactor * e.points
 }
 
-func (e *Event) SetBonusPoints(bonusPoints int) {
-	e.bonusPoints = bonusPoints
-}
-
 func (e *Event) SetPoints(points int) {
 	e.points = points
+}
+
+func (e *Event) GetPlayer() string {
+
+	p, hasPlayer := e.eventDetails["player"]
+
+	if hasPlayer {
+		return p
+	}
+	return ""
+}
+
+func (e *Event) GetTime() string {
+	return e.time
 }
