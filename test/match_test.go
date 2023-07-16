@@ -15,8 +15,8 @@ func TestApplyingNoSpecialRulesOnMatch_BrazilShouldWin(t *testing.T) {
 
 	match := entities.NewMatch("Brazil", brasilEvents, "Spain", spainEvents)
 
-	match.DefineWinner()
-	match.AssignPointsToWinner()
+	match.DefineFinalResult()
+	match.AssignPointsAccordingFinalResult()
 	results := match.GetResults()
 
 	brazilResults, hasBrazilResults := results["Brazil"]
@@ -53,8 +53,8 @@ func TestApplyingNoSpecialRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 
 	match := entities.NewMatch("Brazil", brasilEvents, "Spain", spainEvents)
 
-	match.DefineWinner()
-	match.AssignPointsToWinner()
+	match.DefineFinalResult()
+	match.AssignPointsAccordingFinalResult()
 	results := match.GetResults()
 
 	brazilResults, hasBrazilResults := results["Brazil"]
@@ -68,12 +68,12 @@ func TestApplyingNoSpecialRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 		t.Errorf("Missing Spain results.")
 	}
 
-	if brazilResults.Total_points != 1 {
-		t.Errorf("Result error. Expected 1 points and Brazil results points are: %d", brazilResults.Total_points,)
+	if brazilResults.Total_points != 2 {
+		t.Errorf("Result error. Expected 2 points and Brazil results points are: %d", brazilResults.Total_points,)
 	}
 
-	if spainResults.Total_points != 1 {
-		t.Errorf("Result error. Expected 1 points and Spain results points are: %d", spainResults.Total_points,)
+	if spainResults.Total_points != 2 {
+		t.Errorf("Result error. Expected 2 points and Spain results points are: %d", spainResults.Total_points,)
 
 	}
 }
@@ -95,8 +95,8 @@ func TestApplyingParticularRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 	particularRule := entities.NewParticularRule("particular", 0, 2, "", "")
 
 	match.ApplySpecialRule(particularRule)
-	match.DefineWinner()
-	match.AssignPointsToWinner()
+	match.DefineFinalResult()
+	match.AssignPointsAccordingFinalResult()
 	results := match.GetResults()
 
 	brazilResults, hasBrazilResults := results["Brazil"]
@@ -110,12 +110,12 @@ func TestApplyingParticularRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 		t.Errorf("Missing Spain results.")
 	}
 
-	if brazilResults.Total_points != 2 {
-		t.Errorf("Result error. Expected 2 points and Brazil results points are: %d", brazilResults.Total_points,)
+	if brazilResults.Total_points != 3 {
+		t.Errorf("Result error. Expected 3 points and Brazil results points are: %d", brazilResults.Total_points,)
 	}
 
-	if spainResults.Total_points != 2 {
-		t.Errorf("Result error. Expected 2 points and Spain results points are: %d", spainResults.Total_points,)
+	if spainResults.Total_points != 3 {
+		t.Errorf("Result error. Expected 3 points and Spain results points are: %d", spainResults.Total_points,)
 
 	}
 }

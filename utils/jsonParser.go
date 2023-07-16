@@ -92,7 +92,6 @@ func (j *JsonParser) ParseRules(filepath string) ([]entities.MatchRule,[]entitie
 
 		var valueFactor int
 		if len(rule.Value_factor) > 0 {
-			fmt.Println(rule.Value_factor[1:2])
 			valueFactor, _ = strconv.Atoi(rule.Value_factor[1:2])
 
 		} 
@@ -100,7 +99,6 @@ func (j *JsonParser) ParseRules(filepath string) ([]entities.MatchRule,[]entitie
 		if rule.Type == "match" {
 			newRule := entities.NewMatchRule(rule.Event, points)
 			matchRules = append(matchRules, newRule)
-			fmt.Println(newRule, "nuevaaa")
 
 		} else if rule.Type == "single" || rule.Type == "side" {
 			newRule := entities.NewBonusPointsRule(rule.Event, rule.Condition.At_least, rule.Bonus_points, rule.Condition.Player, rule.Condition.After_time, rule.Condition.Distance)

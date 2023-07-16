@@ -1,7 +1,5 @@
 package entities
 
-import ("fmt")
-
 type ParticularRule struct {
 	ruleType		string
 	event             string
@@ -32,7 +30,6 @@ func (particularRule ParticularRule) Apply (eventsMap map[string][]*Event) {
 
 	for _, event := range events {
 		//TODO: tiene que cumplir condicion
-		fmt.Println("vvvv", particularRule.valueFactor)
 		event.SetValueFactor(particularRule.valueFactor)
 	}
 }

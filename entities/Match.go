@@ -1,7 +1,5 @@
 package entities
 
-import ("fmt")
-
 type Match struct {
 	teams map[string]*Outcome
 }
@@ -18,7 +16,6 @@ func (m *Match) ApplySpecialRule(rule ParticularRule) {
 
 	for _, outcome := range m.teams {
 		rule.Apply(outcome.GetEvents())
-		fmt.Println(outcome)
     } 
 }
 
@@ -38,7 +35,7 @@ func (m *Match) ApplyRuleToWinner(rule MatchRule) {
 	
 }
 
-func (m *Match) DefineWinner() {
+func (m *Match) DefineFinalResult() {
 	var teamsAreEven bool 
 	var teamWithMorePoints string 
 	var maxPoints int = 0
@@ -68,6 +65,10 @@ func (m *Match) DefineWinner() {
 	if !teamsAreEven {
 		outcome := m.teams[teamWithMorePoints]
 		outcome.WinMatch()
+	} else {
+		for _, outcome := range m.teams {
+			outcome.DrawMatch()
+		}
 	}
 }
 
@@ -82,8 +83,9 @@ func (m *Match) GetResults() map[string]Result {
 }
 
 
-func (m *Match) AssignPointsToWinner() {
+func (m *Match) AssignPointsAccordingFinalResult() {
 	for _, outcome := range m.teams {
 		outcome.AssignPointsIfWinner()
+		outcome.AssignPointsIfDraw()
     }
 }

@@ -85,7 +85,8 @@ func main() {
 		for _, rule := range particularRules {
 			match.ApplySpecialRule(rule)
 		}
-		match.DefineWinner()
+		match.DefineFinalResult()
+		match.AssignPointsAccordingFinalResult()
 
 		fmt.Println(match)
 
@@ -97,7 +98,6 @@ func main() {
 			match.ApplyRuleToWinner(rule)
 		}
 
-		match.AssignPointsToWinner()
 
 		fmt.Println(resultsPerCountry)
 		fmt.Println(match.GetResults())

@@ -1,7 +1,5 @@
 package entities
 
-import ("fmt")
-
 type Outcome struct {
 	totalPoints int
 	bonusPoints int
@@ -32,7 +30,6 @@ func (o *Outcome) GetEvents() map[string][]*Event{
 
 func (o *Outcome) AddTotalPoints(points int) {
 	o.totalPoints += points
-	fmt.Println("tegooooo", o.totalPoints)
 }
 
 func (o *Outcome) AddBonusPoints(points int) {
@@ -44,6 +41,13 @@ func (o *Outcome) WinMatch() {
 	o.events["win"] = []*Event{NewEvent("win", "90", make(map[string]string))}
 }
 
+func (o *Outcome) DrawMatch() {
+	e := NewEvent("draw", "90", make(map[string]string))
+	e.SetPoints(1)
+	o.events["draw"] = []*Event{e}
+
+}
+
 func (o *Outcome) GetResults() (int, int) {
 	return o.totalPoints, o.bonusPoints
 }
@@ -53,6 +57,16 @@ func (o *Outcome) AssignPointsIfWinner() {
 	event, isWinner := o.events["win"]
 
 	if isWinner {
+		o.totalPoints += event[0].GetFinalPoints()
+	}
+
+}
+
+func (o *Outcome) AssignPointsIfDraw() {
+
+	event, isDraw := o.events["draw"]
+
+	if isDraw {
 		o.totalPoints += event[0].GetFinalPoints()
 	}
 
