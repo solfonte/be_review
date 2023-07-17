@@ -1,9 +1,10 @@
 package entities
+
 type Outcome struct {
-	totalPoints int
-	bonusPoints int
+	totalPoints  int
+	bonusPoints  int
 	amountScores int
-	events map[string][]*Event
+	events       map[string][]*Event
 }
 
 func NewOutcome(events []*Event) *Outcome {
@@ -13,18 +14,18 @@ func NewOutcome(events []*Event) *Outcome {
 
 		eventType := event.GetType()
 		_, hasKey := eventsPerType[eventType]
-		
+
 		if !hasKey {
 			eventsPerType[eventType] = []*Event{event}
-			} else {
-				eventsPerType[eventType] = append(eventsPerType[eventType], event)
-			}
+		} else {
+			eventsPerType[eventType] = append(eventsPerType[eventType], event)
 		}
-		
+	}
+
 	return &Outcome{totalPoints: 0, bonusPoints: 0, events: eventsPerType}
 }
 
-func (o *Outcome) GetEvents() map[string][]*Event{
+func (o *Outcome) GetEvents() map[string][]*Event {
 	return o.events
 }
 
@@ -35,7 +36,6 @@ func (o *Outcome) AddTotalPoints(points int) {
 func (o *Outcome) AddBonusPoints(points int) {
 	o.bonusPoints += points
 }
-
 
 func (o *Outcome) WinMatch() {
 	m := make(map[string]string)

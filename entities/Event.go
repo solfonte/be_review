@@ -1,10 +1,11 @@
 package entities
+
 type Event struct {
 	eventType    string
 	time         string
 	eventDetails *map[string]string
 	valueFactor  int
-	points 		 int
+	points       int
 }
 
 func NewEvent(eventType string, time string, eventDetails *map[string]string) *Event {

@@ -1,20 +1,20 @@
 package entities
 
 type MatchRule struct {
-	ruleType	string
-	event  string
-	points int
+	ruleType string
+	event    string
+	points   int
 }
 
 func NewMatchRule(event string, points int) MatchRule {
 	return MatchRule{
-		ruleType:	"match",
-		event:  	event,
-		points: 	points,
+		ruleType: "match",
+		event:    event,
+		points:   points,
 	}
 }
 
-func (matchRule MatchRule) Apply (eventsMap map[string][]*Event) {	
+func (matchRule MatchRule) Apply(eventsMap map[string][]*Event) {
 	events, hasKey := eventsMap["win"]
 	if !hasKey {
 		return
@@ -22,4 +22,3 @@ func (matchRule MatchRule) Apply (eventsMap map[string][]*Event) {
 
 	events[0].SetPoints(matchRule.points)
 }
-

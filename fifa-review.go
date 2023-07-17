@@ -18,7 +18,6 @@ func getFlagFiles() (string, utils.FlagsArray) {
 }
 
 func prepareMatches(matchFilePaths utils.FlagsArray) ([]*entities.Match, error) {
-	
 
 	if len(matchFilePaths) == 0 {
 		fmt.Println("Please provide at least one match file path")
@@ -65,7 +64,7 @@ func defineTableOrder(results map[string]*entities.Result) map[string]entities.R
 	return orderedResults
 }
 
-func prepareRules(rulesFilePath string) ([]entities.MatchRule,[]entities.BonusPointsRule,[]entities.ParticularRule, error) {
+func prepareRules(rulesFilePath string) ([]entities.MatchRule, []entities.BonusPointsRule, []entities.ParticularRule, error) {
 	parser := utils.JsonParser{}
 
 	matchRules, bonusPointsRules, particularRules, err := parser.ParseRules(rulesFilePath)
@@ -93,9 +92,9 @@ func main() {
 	var matchRules []entities.MatchRule
 	var bonusPointsRules []entities.BonusPointsRule
 	var particularRules []entities.ParticularRule
-	if len(rulesFile) > 0{
+	if len(rulesFile) > 0 {
 		matchRules, bonusPointsRules, particularRules, err = prepareRules(rulesFile)
-		
+
 	}
 
 	if err != nil {
@@ -105,22 +104,21 @@ func main() {
 	resultsPerCountry := make(map[string]*entities.Result)
 
 	for _, match := range matches {
-		
+
 		for _, rule := range particularRules {
 			match.ApplySpecialRule(rule)
 		}
 		match.DefineFinalResult()
-		
+
 		for _, rule := range matchRules {
 			match.ApplyRuleToWinner(rule)
 		}
-		
+
 		match.AssignPointsAccordingFinalResult()
-		
+
 		for _, rule := range bonusPointsRules {
 			match.ApplyBonusPointsRule(rule)
 		}
-
 
 		for team, result := range match.GetResults() {
 
@@ -132,16 +130,15 @@ func main() {
 				r.Scores_in_favor_amount += result.Scores_in_favor_amount
 			} else {
 				resultsPerCountry[team] = &entities.Result{
-					Total_points: result.Total_points, 
-					Bonus_points: result.Bonus_points, 
-					Played_matches_amount: result.Played_matches_amount, 
+					Total_points:           result.Total_points,
+					Bonus_points:           result.Bonus_points,
+					Played_matches_amount:  result.Played_matches_amount,
 					Scores_in_favor_amount: result.Scores_in_favor_amount,
 				}
 			}
-			
+
 		}
 
-		
 	}
 
 	orderedCountriesByPoints := defineTableOrder(resultsPerCountry)

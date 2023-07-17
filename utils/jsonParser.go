@@ -61,7 +61,7 @@ func (j *JsonParser) ParseMatch(filepath string) (*entities.Match, error) {
 	return parsedMatch, jsonParseError
 }
 
-func (j *JsonParser) ParseRules(filepath string) ([]entities.MatchRule,[]entities.BonusPointsRule,[]entities.ParticularRule, error) {
+func (j *JsonParser) ParseRules(filepath string) ([]entities.MatchRule, []entities.BonusPointsRule, []entities.ParticularRule, error) {
 
 	var rules []schemas.RuleSchema
 	var matchRules []entities.MatchRule
@@ -94,8 +94,8 @@ func (j *JsonParser) ParseRules(filepath string) ([]entities.MatchRule,[]entitie
 		if len(rule.Value_factor) > 0 {
 			valueFactor, _ = strconv.Atoi(rule.Value_factor[1:2])
 
-		} 
-		
+		}
+
 		if rule.Type == "match" {
 			newRule := entities.NewMatchRule(rule.Event, points)
 			matchRules = append(matchRules, newRule)
@@ -114,8 +114,7 @@ func (j *JsonParser) ParseRules(filepath string) ([]entities.MatchRule,[]entitie
 	return matchRules, bonusPointsRules, particularRules, jsonParseError
 }
 
-
-func (j *JsonParser) SaveResults (results map[string]entities.Result) {
+func (j *JsonParser) SaveResults(results map[string]entities.Result) {
 	jsonData, err := json.Marshal(results)
 	if err != nil {
 		fmt.Println("Error marshaling JSON:", err)

@@ -6,4 +6,3 @@ type Result struct {
 	Played_matches_amount  int
 	Scores_in_favor_amount int
 }
-

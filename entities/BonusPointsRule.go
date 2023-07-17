@@ -1,26 +1,26 @@
 package entities
+
 type BonusPointsRule struct {
-	ruleType		string
+	ruleType          string
 	event             string
 	minimunOcurrences int
 	bonusPoints       int
 	player            string
 	afterTime         []string
-	distance 		string
+	distance          string
 }
 
 func NewBonusPointsRule(event string, minimunOcurrences int, bonusPoints int, player string, afterTime []string, distance string) BonusPointsRule {
 	return BonusPointsRule{
-		ruleType:			"bonusPoints",
+		ruleType:          "bonusPoints",
 		event:             event,
 		minimunOcurrences: minimunOcurrences,
 		bonusPoints:       bonusPoints,
 		player:            player,
 		afterTime:         afterTime,
-		distance: distance,
+		distance:          distance,
 	}
 }
-
 
 func (r *BonusPointsRule) AppliesToEvent(event Event) bool {
 
@@ -62,19 +62,18 @@ func (r *BonusPointsRule) AppliesToEvent(event Event) bool {
 	return isAfterTime && isPlayer && isDistance
 }
 
-
-func (r *BonusPointsRule) Apply (eventsMap map[string][]*Event) int {
+func (r *BonusPointsRule) Apply(eventsMap map[string][]*Event) int {
 
 	bonusPoints := 0
-	 events, hasEvent := eventsMap[r.event]
+	events, hasEvent := eventsMap[r.event]
 	if !hasEvent {
 		return 0
 	}
 
-	if r.minimunOcurrences > 0{ 
+	if r.minimunOcurrences > 0 {
 		if len(events) < r.minimunOcurrences {
 			return 0
-		} 
+		}
 		return r.bonusPoints
 	}
 
@@ -83,10 +82,8 @@ func (r *BonusPointsRule) Apply (eventsMap map[string][]*Event) int {
 		if r.AppliesToEvent(*event) {
 			bonusPoints += r.bonusPoints
 		}
-	} 
+	}
 
 	return bonusPoints
 
 }
-
-
