@@ -7,8 +7,9 @@ import (
 
 func TestApplyingNoSpecialRulesOnMatch_BrazilShouldWin(t *testing.T) {
 
+	m := make(map[string]string)
 	brasilEvents := []*entities.Event{
-		entities.NewEvent("score", "0", make(map[string]string)),
+		entities.NewEvent("score", "0", &m),
 	}
 
 	spainEvents := []*entities.Event{}
@@ -30,8 +31,8 @@ func TestApplyingNoSpecialRulesOnMatch_BrazilShouldWin(t *testing.T) {
 		t.Errorf("Missing Spain results.")
 	}
 
-	if brazilResults.Total_points != 4 {
-		t.Errorf("Result error. Expected 4 points and Brazil results points are: %d", brazilResults.Total_points,)
+	if brazilResults.Total_points != 3 {
+		t.Errorf("Result error. Expected 3 points and Brazil results points are: %d", brazilResults.Total_points,)
 	}
 
 	if spainResults.Total_points != 0 {
@@ -43,12 +44,13 @@ func TestApplyingNoSpecialRulesOnMatch_BrazilShouldWin(t *testing.T) {
 
 func TestApplyingNoSpecialRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 
+	m := make(map[string]string)
 	brasilEvents := []*entities.Event{
-		entities.NewEvent("score", "0", make(map[string]string)),
+		entities.NewEvent("score", "0", &m),
 	}
 
 	spainEvents := []*entities.Event{
-		entities.NewEvent("score", "90", make(map[string]string)),
+		entities.NewEvent("score", "90", &m),
 	}
 
 	match := entities.NewMatch("Brazil", brasilEvents, "Spain", spainEvents)
@@ -68,12 +70,12 @@ func TestApplyingNoSpecialRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 		t.Errorf("Missing Spain results.")
 	}
 
-	if brazilResults.Total_points != 2 {
-		t.Errorf("Result error. Expected 2 points and Brazil results points are: %d", brazilResults.Total_points,)
+	if brazilResults.Total_points != 1 {
+		t.Errorf("Result error. Expected 1 points and Brazil results points are: %d", brazilResults.Total_points,)
 	}
 
-	if spainResults.Total_points != 2 {
-		t.Errorf("Result error. Expected 2 points and Spain results points are: %d", spainResults.Total_points,)
+	if spainResults.Total_points != 1 {
+		t.Errorf("Result error. Expected 1 points and Spain results points are: %d", spainResults.Total_points,)
 
 	}
 }
@@ -82,17 +84,18 @@ func TestApplyingNoSpecialRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 
 func TestApplyingParticularRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 
+	m := make(map[string]string)
 	brasilEvents := []*entities.Event{
-		entities.NewEvent("score", "0", make(map[string]string)),
+		entities.NewEvent("score", "0", &m),
 	}
 
 	spainEvents := []*entities.Event{
-		entities.NewEvent("score", "90", make(map[string]string)),
+		entities.NewEvent("score", "90", &m),
 	}
 
 	match := entities.NewMatch("Brazil", brasilEvents, "Spain", spainEvents)
 
-	particularRule := entities.NewParticularRule("particular", 0, 2, "", "")
+	particularRule := entities.NewParticularRule("particular", 1, 2, "", []string{}, "")
 
 	match.ApplySpecialRule(particularRule)
 	match.DefineFinalResult()
@@ -110,12 +113,12 @@ func TestApplyingParticularRulesOnMatch_BothTeamsShouldBeEven(t *testing.T) {
 		t.Errorf("Missing Spain results.")
 	}
 
-	if brazilResults.Total_points != 3 {
-		t.Errorf("Result error. Expected 3 points and Brazil results points are: %d", brazilResults.Total_points,)
+	if brazilResults.Total_points != 1 {
+		t.Errorf("Result error. Expected 1 points and Brazil results points are: %d", brazilResults.Total_points,)
 	}
 
-	if spainResults.Total_points != 3 {
-		t.Errorf("Result error. Expected 3 points and Spain results points are: %d", spainResults.Total_points,)
+	if spainResults.Total_points != 1 {
+		t.Errorf("Result error. Expected 1 points and Spain results points are: %d", spainResults.Total_points,)
 
 	}
 }
