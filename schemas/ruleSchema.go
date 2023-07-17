@@ -2,7 +2,7 @@ package schemas
 
 type RuleConditionSchema struct {
 	Distance   string
-	After_time string
+	After_time []string
 	At_least   int
 	Player     string
 }
