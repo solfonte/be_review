@@ -41,6 +41,9 @@ func (r *ParticularRule) AppliesToEvent(event *Event) bool {
 					isAfterTime = isAfterTime && eventTime[4:5] >= time[4:5]
 				}
 			}
+			if isAfterTime {
+				break
+			}
 		}
 	}
 
