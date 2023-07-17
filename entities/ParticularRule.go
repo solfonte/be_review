@@ -1,17 +1,15 @@
 package entities
-
 type ParticularRule struct {
 	ruleType		string
 	event             string
 	minimunOcurrences int
 	valueFactor       int
 	player            string
-	afterTime         string
+	afterTime         []string
 	distance 			string
 }
 
-func NewParticularRule(event string, minimunOcurrences int, valueFactor int, player string, afterTime string, distance string) ParticularRule {
-	
+func NewParticularRule(event string, minimunOcurrences int, valueFactor int, player string, afterTime []string, distance string) ParticularRule {
 	return ParticularRule {
 		ruleType:			"particular",
 		event:             event,
@@ -25,22 +23,23 @@ func NewParticularRule(event string, minimunOcurrences int, valueFactor int, pla
 
 
 func (r *ParticularRule) AppliesToEvent(event *Event) bool {
-	isPlayer := false
-	isDistance := false
-	isAfterTime := false
+	isPlayer := true
+	isDistance := true
+	isAfterTime := true
 
-	if len(r.player) == 0 || event.GetPlayer() == r.player {
-		isPlayer = true
+	if len(r.player) > 0 &&  event.GetPlayer() != r.player {
+		isPlayer = false
 	}
-
 	if len(r.afterTime) > 0 {
 		eventTime := event.GetTime()
-		if len(r.afterTime) == 2 {
-			isAfterTime = eventTime[:2] >= r.afterTime[:2]
-		} else {
-			isAfterTime = eventTime[:2] >= r.afterTime[:2]
-			if len(eventTime) > 2 {
-				isAfterTime = isAfterTime && eventTime[4:5] >= r.afterTime[4:5]
+		for _, time := range r.afterTime {
+			if len(time) == 2 {
+				isAfterTime = eventTime[:2] >= time[:2]
+				} else {
+				isAfterTime = eventTime[:2] >= time[:2]
+				if len(eventTime) > 2 {
+					isAfterTime = isAfterTime && eventTime[4:5] >= time[4:5]
+				}
 			}
 		}
 	}
@@ -55,6 +54,7 @@ func (r *ParticularRule) AppliesToEvent(event *Event) bool {
 		}
 	}
 
+
 	return isAfterTime && isPlayer && isDistance
 }
 
@@ -68,7 +68,7 @@ func (particularRule ParticularRule) Apply (eventsMap map[string][]*Event) {
 
 	for _, event := range events {
 		amountScores := len(events) 
-		if particularRule.AppliesToEvent(event) || amountScores >= particularRule.minimunOcurrences{
+		if particularRule.AppliesToEvent(event) || (particularRule.minimunOcurrences > 0 && amountScores >= particularRule.minimunOcurrences) {
 			event.SetValueFactor(particularRule.valueFactor)
 		}
 	}
