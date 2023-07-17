@@ -105,7 +105,7 @@ func (j *JsonParser) ParseRules(filepath string) ([]entities.MatchRule,[]entitie
 			bonusPointsRules = append(bonusPointsRules, newRule)
 
 		} else {
-			newRule := entities.NewParticularRule(rule.Event, rule.Condition.At_least, valueFactor, rule.Condition.Player, rule.Condition.After_time)
+			newRule := entities.NewParticularRule(rule.Event, rule.Condition.At_least, valueFactor, rule.Condition.Player, rule.Condition.After_time, rule.Condition.Distance)
 			particularRules = append(particularRules, newRule)
 
 		}

@@ -1,6 +1,4 @@
 package entities
-
-
 type BonusPointsRule struct {
 	ruleType		string
 	event             string
@@ -19,25 +17,44 @@ func NewBonusPointsRule(event string, minimunOcurrences int, bonusPoints int, pl
 		bonusPoints:       bonusPoints,
 		player:            player,
 		afterTime:         afterTime,
+		distance: distance,
 	}
 }
 
 
 func (r *BonusPointsRule) AppliesToEvent(event Event) bool {
 
-	isPlayer := false
-	//isDistance := false
-	isAfterTime := false
+	isPlayer := true
+	isDistance := true
+	isAfterTime := true
 
-	if len(r.player) == 0 || event.GetPlayer() == r.player {
-		isPlayer = true
+	if len(r.player) > 0 && event.GetPlayer() != r.player {
+		isPlayer = false
 	}
 
-	if len(r.afterTime) == 0 || event.GetTime() == r.afterTime {
-		isAfterTime = true
+	if len(r.afterTime) > 0 {
+		eventTime := event.GetTime()
+		if len(r.afterTime) == 2 {
+			isAfterTime = eventTime[:2] >= r.afterTime[:2]
+		} else {
+			isAfterTime = eventTime[:2] >= r.afterTime[:2]
+			if len(eventTime) > 2 {
+				isAfterTime = isAfterTime && eventTime[4:5] >= r.afterTime[4:5]
+			}
+		}
 	}
 
-	return isAfterTime && isPlayer
+	if len(r.distance) > 0 {
+		eventDistance := event.GetDistance()
+
+		if r.distance[0:1] == "+" {
+			isDistance = eventDistance >= r.distance[1:]
+		} else {
+			isDistance = eventDistance <= r.distance[1:]
+		}
+	}
+
+	return isAfterTime && isPlayer && isDistance
 }
 
 

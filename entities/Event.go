@@ -47,3 +47,13 @@ func (e *Event) GetPlayer() string {
 func (e *Event) GetTime() string {
 	return e.time
 }
+
+func (e *Event) GetDistance() string {
+
+	d, hasDistance := e.eventDetails["distance"]
+
+	if hasDistance {
+		return d
+	}
+	return ""
+}

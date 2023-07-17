@@ -1,5 +1,4 @@
 package entities
-import ("fmt")
 type Match struct {
 	teams map[string]*Outcome
 }
@@ -44,7 +43,6 @@ func (m *Match) DefineFinalResult() {
 		events := outcome.GetEvents()
 		scorePoints := 0
 		scores, hasScores := events["score"]
-		fmt.Println("SOCRES", len(scores))
 
 		if hasScores {
 			amountScores := len(scores)
