@@ -1,5 +1,4 @@
 package entities
-
 type Outcome struct {
 	totalPoints int
 	bonusPoints int
@@ -39,11 +38,14 @@ func (o *Outcome) AddBonusPoints(points int) {
 
 
 func (o *Outcome) WinMatch() {
-	o.events["win"] = []*Event{NewEvent("win", "90", make(map[string]string))}
+	m := make(map[string]string)
+	event := NewEvent("win", "90", &m)
+	o.events["win"] = []*Event{event}
 }
 
 func (o *Outcome) DrawMatch() {
-	e := NewEvent("draw", "90", make(map[string]string))
+	m := make(map[string]string)
+	e := NewEvent("draw", "90", &m)
 	e.SetPoints(1)
 	o.events["draw"] = []*Event{e}
 

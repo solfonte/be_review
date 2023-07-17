@@ -5,11 +5,11 @@ type BonusPointsRule struct {
 	minimunOcurrences int
 	bonusPoints       int
 	player            string
-	afterTime         string
+	afterTime         []string
 	distance 		string
 }
 
-func NewBonusPointsRule(event string, minimunOcurrences int, bonusPoints int, player string, afterTime string, distance string) BonusPointsRule {
+func NewBonusPointsRule(event string, minimunOcurrences int, bonusPoints int, player string, afterTime []string, distance string) BonusPointsRule {
 	return BonusPointsRule{
 		ruleType:			"bonusPoints",
 		event:             event,
@@ -34,12 +34,14 @@ func (r *BonusPointsRule) AppliesToEvent(event Event) bool {
 
 	if len(r.afterTime) > 0 {
 		eventTime := event.GetTime()
-		if len(r.afterTime) == 2 {
-			isAfterTime = eventTime[:2] >= r.afterTime[:2]
-		} else {
-			isAfterTime = eventTime[:2] >= r.afterTime[:2]
-			if len(eventTime) > 2 {
-				isAfterTime = isAfterTime && eventTime[4:5] >= r.afterTime[4:5]
+		for _, time := range r.afterTime {
+			if len(time) == 2 {
+				isAfterTime = eventTime[:2] >= time[:2]
+			} else {
+				isAfterTime = eventTime[:2] >= time[:2]
+				if len(eventTime) > 2 {
+					isAfterTime = isAfterTime && eventTime[4:5] >= time[4:5]
+				}
 			}
 		}
 	}
@@ -66,8 +68,7 @@ func (r *BonusPointsRule) Apply (eventsMap map[string][]*Event) int {
 		return 0
 	}
 
-	if r.minimunOcurrences > 0{
-		//aplica a la cantidad 
+	if r.minimunOcurrences > 0{ 
 		if len(events) < r.minimunOcurrences {
 			return 0
 		} 

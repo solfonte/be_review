@@ -1,14 +1,13 @@
 package entities
-
 type Event struct {
 	eventType    string
 	time         string
-	eventDetails map[string]string
+	eventDetails *map[string]string
 	valueFactor  int
 	points 		 int
 }
 
-func NewEvent(eventType string, time string, eventDetails map[string]string) *Event {
+func NewEvent(eventType string, time string, eventDetails *map[string]string) *Event {
 	points := 0
 	if eventType == "score" {
 		points = 1
@@ -36,7 +35,7 @@ func (e *Event) SetPoints(points int) {
 
 func (e *Event) GetPlayer() string {
 
-	p, hasPlayer := e.eventDetails["player"]
+	p, hasPlayer := (*e.eventDetails)["player"]
 
 	if hasPlayer {
 		return p
@@ -50,7 +49,7 @@ func (e *Event) GetTime() string {
 
 func (e *Event) GetDistance() string {
 
-	d, hasDistance := e.eventDetails["distance"]
+	d, hasDistance := (*e.eventDetails)["distance"]
 
 	if hasDistance {
 		return d
