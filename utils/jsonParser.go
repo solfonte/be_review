@@ -30,7 +30,7 @@ func CreateEventsList(events []schemas.EventSchema) []*entities.Event {
 			eventDetails["obs"] = event.Obs
 		}
 
-		parsedEvents = append(parsedEvents, entities.NewEvent(event.Event, event.Time, eventDetails))
+		parsedEvents = append(parsedEvents, entities.NewEvent(event.Event, event.Time, &eventDetails))
 	}
 
 	return parsedEvents
